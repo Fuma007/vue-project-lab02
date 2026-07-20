@@ -3,13 +3,12 @@ import EventCard from '@/components/EventCard.vue'
 import EventInfo from '@/components/EventInfo.vue'
 import type { Event } from '@/types'
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import EventService from '@/services/EventService'
 
 const events = ref<Event[] | null>(null)
 
 onMounted (() => {
-  axios
-    .get('https://my-json-server.typicode.com/Fuma007/mock-server/events')
+  EventService.getEvents()
     .then((response) => {
       events.value = response.data
     })
