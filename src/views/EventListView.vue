@@ -1,36 +1,36 @@
 <script setup lang="ts">
 import EventCard from '@/components/EventCard.vue'
-import EventInfo from '@/components/EventInfo.vue'
 import type { Event } from '@/types'
-import { ref, onMounted, computed, watchEffect } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import EventService from '@/services/EventService'
 
 const events = ref<Event[] | null>(null)
 const totalEvents = ref<number>(0)
 const hasNextPage = computed(() => {
-  const totalPages = Math.ceil(totalEvents.value / 2)
-  return page.value < totalPages
+  const totalPages = Math.ceil(totalEvents.value / props.perPage)
+  return props.page < totalPages
 })
+
 const props = defineProps({
   page: {
     type: Number,
     required: true
+  },
+  perPage: {
+    type: Number,
+    required: true
   }
 })
-const page = computed(() => props.page)
 
-onMounted (() => {
-  watchEffect(() => {
-    events.value = null
-    EventService.getEvents(2, page.value)
-      .then((response) => {
-        events.value = response.data
-        totalEvents.value = response.headers['x-total-count']
-      })
-      .catch((error) => {
-        console.error('There was an error!', error)
-      })
-  })
+onMounted(() => {
+  EventService.getEvents(props.perPage, props.page)
+    .then((response) => {
+      events.value = response.data
+      totalEvents.value = response.headers['x-total-count']
+    })
+    .catch((error) => {
+      console.error('There was an error!', error)
+    })
 })
 </script>
 
@@ -44,7 +44,7 @@ onMounted (() => {
   <div class="pagination">
     <RouterLink
       id="page-prev"
-      :to="{ name: 'event-list-view', query: { page: page - 1 } }"
+      :to="{ name: 'event-list-view', query: { page: page - 1, perPage: perPage } }"
       rel="prev"
       v-if="page != 1"
       >&#60; Prev Page</RouterLink
@@ -52,7 +52,7 @@ onMounted (() => {
 
     <RouterLink
       id="page-next"
-      :to="{ name: 'event-list-view', query: { page: page + 1 } }"
+      :to="{ name: 'event-list-view', query: { page: page + 1, perPage: perPage } }"
       rel="next"
       v-if="hasNextPage"
       >Next Page &#62;</RouterLink
