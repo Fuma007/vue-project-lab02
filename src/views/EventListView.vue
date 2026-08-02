@@ -2,8 +2,9 @@
 import EventCard from '@/components/EventCard.vue'
 import EventInfo from '@/components/EventInfo.vue'
 import type { Event } from '@/types'
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watchEffect } from 'vue'
 import EventService from '@/services/EventService'
+import { er } from 'vue-router/dist/index-BQLwgiyK.js'
 
 const events = ref<Event[] | null>(null)
 
@@ -16,13 +17,16 @@ const props = defineProps({
 const page = computed(() => props.page)
 
 onMounted (() => {
-  EventService.getEvents(5, page.value)
-    .then((response) => {
-      events.value = response.data
-    })
-    .catch((error) => {
-      console.error('There was an error!', error)
-    })
+  watchEffect(() => {
+    events.value = null
+    EventService.getEvents(2, page.value)
+      .then((response) => {
+        events.value = response.data
+      })
+      .catch((error) => {
+        console.error('There was an error!', error)
+      })
+  })
 })
 </script>
 
