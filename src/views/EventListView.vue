@@ -1,15 +1,11 @@
 <script setup lang="ts">
 import EventCard from '@/components/EventCard.vue'
 import type { Event } from '@/types'
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import EventService from '@/services/EventService'
 
 const events = ref<Event[] | null>(null)
 const totalEvents = ref<number>(0)
-const hasNextPage = computed(() => {
-  const totalPages = Math.ceil(totalEvents.value / props.perPage)
-  return props.page < totalPages
-})
 
 const props = defineProps({
   page: {
@@ -22,7 +18,12 @@ const props = defineProps({
   }
 })
 
-onMounted(() => {
+const hasNextPage = computed(() => {
+  const totalPages = Math.ceil(totalEvents.value / props.perPage)
+  return props.page < totalPages
+})
+
+const fetchEvents = () => {
   EventService.getEvents(props.perPage, props.page)
     .then((response) => {
       events.value = response.data
@@ -31,7 +32,14 @@ onMounted(() => {
     .catch((error) => {
       console.error('There was an error!', error)
     })
-})
+}
+
+onMounted(fetchEvents)
+
+watch(
+  () => [props.page, props.perPage],
+  fetchEvents
+)
 </script>
 
 <template>
