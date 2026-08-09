@@ -73,6 +73,7 @@ const router = createRouter({
     },
   ],
 })
+
 router.beforeEach(() => {
   nProgress.start()
 })
