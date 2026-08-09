@@ -21,8 +21,8 @@ const router = createRouter({
       component: EventListView,
       props: (route) => ({
         page: parseInt(route.query.page as string) || 1,
-        perPage: parseInt(route.query.perPage as string) || 2
-      })
+        perPage: parseInt(route.query.perPage as string) || 2,
+      }),
     },
     {
       path: '/event/:id',
@@ -33,19 +33,20 @@ const router = createRouter({
         const id = parseInt(to.params.id as string)
         const eventStore = useEventStore()
         return EventService.getEvent(id)
-        .then((response) => {
-          // need to setup the data for the event
-          eventStore.setEvent(response.data)
-        }).catch((error) => {
-          if (error.response && error.response.status === 404) {
-            return {
-              name: '404-resource-view',
-              params: { resource: 'event' }
+          .then((response) => {
+            // need to setup the data for the event
+            eventStore.setEvent(response.data)
+          })
+          .catch((error) => {
+            if (error.response && error.response.status === 404) {
+              return {
+                name: '404-resource-view',
+                params: { resource: 'event' },
+              }
+            } else {
+              return { name: 'network-error-view' }
             }
-          } else{
-            return { name: 'network-error-view' }
-          }
-        })
+          })
       },
       children: [
         {
@@ -62,39 +63,43 @@ const router = createRouter({
           path: 'edit',
           name: 'event-edit-view',
           component: EventEditView,
-        }
-      ]
+        },
+      ],
     },
     {
       path: '/about',
       name: 'about',
-      component: AboutView
+      component: AboutView,
     },
     {
       path: '/students',
       name: 'students',
-      component: StudentListView
+      component: StudentListView,
     },
     {
       path: '/404/:resource',
       name: '404-resource-view',
       component: NotFoundView,
-      props: true
+      props: true,
     },
     {
       path: '/:catchAll(.*)',
       name: 'not-found',
-      component: NotFoundView
+      component: NotFoundView,
     },
     {
       path: '/network-error',
       name: 'network-error-view',
-      component: NetworkErrorView
+      component: NetworkErrorView,
     },
   ],
-  scrollBehavior() {
-    return { top: 0 }
-  }
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0 }
+    }
+  },
 })
 
 router.beforeEach(() => {
