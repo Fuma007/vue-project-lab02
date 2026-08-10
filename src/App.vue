@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { SpeedInsights } from '@vercel/speed-insights/vue';
 import { RouterLink, RouterView } from 'vue-router'
 import { useMessageStore } from './stores/message';
 import { storeToRefs } from 'pinia';
@@ -22,5 +23,6 @@ const { message } = storeToRefs(store)
     </header>
 
     <RouterView />
+    <SpeedInsights />
   </div>
 </template>
