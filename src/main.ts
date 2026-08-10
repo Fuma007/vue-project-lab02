@@ -1,6 +1,8 @@
 import './assets/style.css'
 
 import { createApp } from 'vue'
+import { inject } from '@vercel/analytics'
+inject()
 import { createPinia } from 'pinia'
 
 import App from './App.vue'
