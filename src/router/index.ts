@@ -5,7 +5,6 @@ import EventDetailView from '@/views/event/DetailView.vue'
 import EventRegisterView from '@/views/event/RegisterView.vue'
 import EventEditView from '@/views/event/EditView.vue'
 import EventLayoutView from '@/views/event/LayoutView.vue'
-import StudentListView from '@/views/StudentListView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
 import NetworkErrorView from '@/views/NetworkErrorView.vue'
 import nProgress from 'nprogress'
@@ -70,11 +69,6 @@ const router = createRouter({
       path: '/about',
       name: 'about',
       component: AboutView,
-    },
-    {
-      path: '/students',
-      name: 'students',
-      component: StudentListView,
     },
     {
       path: '/404/:resource',
