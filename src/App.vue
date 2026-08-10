@@ -43,15 +43,4 @@ h2 {
   font-size: 20px;
 }
 
-@keyframes yellowFade {
-  from {
-    background-color: yellow;
-  }
-  to {
-    background-color: transparent;
-  }
-}
-#flashMessage {
-  animation: yellowFade 3s ease-in-out;
-}
 </style>
